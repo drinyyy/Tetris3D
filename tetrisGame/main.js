@@ -1,8 +1,7 @@
 import './style.css';
 import * as BABYLON from '@babylonjs/core';
-import { createTetrisBlock, handleBlockMovement } from './tetris';
-import { TetrominoShapes } from './shapes'; // Import TetrominoShapes
-import { GameBoard } from './gameBoard.js';
+import { createGroundWithGrid } from './gridSurface.js';
+
 
 const canvas = document.getElementById('renderCanvas');
 const engine = new BABYLON.Engine(canvas);
@@ -12,19 +11,47 @@ const createScene = function () {
 
   scene.enablePhysics();
 
-  const gravityVector = new BABYLON.Vector3(0, -9.81, 0);
-  scene.getPhysicsEngine().setGravity(gravityVector);
+  
 
-  const ground = BABYLON.MeshBuilder.CreateGround("ground", scene);
-  ground.scaling.x=15;
-  ground.scaling.z=15;
-  ground.position.y = 0;
-  ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.PlaneImpostor, { mass: 0 }, scene);
+  // const ground = BABYLON.MeshBuilder.CreateGround("ground", scene);
+  // ground.scaling.x=15;
+  // ground.scaling.z=15;
+  // ground.position.y = 0;
+  // ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.PlaneImpostor, { mass: 0 }, scene);
 
-  const shapeIndex = Math.floor(Math.random() * TetrominoShapes.length);
-  const tetrisBlock = createTetrisBlock(scene, shapeIndex);
- 
-  handleBlockMovement(scene, [tetrisBlock]);
+
+  
+
+
+var box = BABYLON.MeshBuilder.CreateBox("box", { size: 1.1 }, scene);
+var mat = new BABYLON.StandardMaterial("boxMat", scene);
+box.material = mat;
+box.position = new BABYLON.Vector3(0, 20, 0);
+
+box.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, restitution: 0 }, scene);
+
+
+
+createGroundWithGrid(scene, box);
+
+
+
+
+// Track frame count and position adjustment
+var frameCount = 0;
+
+// Register a function to be called before each render
+scene.registerBeforeRender(function () {
+    // Implement game logic here if needed
+    
+    // Check if it's time to adjust the position
+    if (frameCount % 50 === 0) {
+        box.position.y -= 1;
+    }
+    
+    frameCount++;
+});
+
 
   const camera = new BABYLON.ArcRotateCamera("camera", Math.PI / 2, Math.PI / 4, 5, new BABYLON.Vector3(0, 25, 35), scene);
   camera.inputs.attached["mousewheel"].wheelPrecision = 2;
@@ -37,6 +64,8 @@ const createScene = function () {
 
   const light = new BABYLON.HemisphericLight();
   light.intensity = 0.5;
+
+
 
   return scene;
 };
@@ -52,15 +81,5 @@ window.addEventListener('resize', function () {
   engine.resize();
 });
 
-// GameBoard
-const rows = 20;
-const columns = 10;
-const gameBoard = new GameBoard(rows, columns);
 
-
-
-
-gameBoard.occupyCell(5, 3); 
-
-gameBoard.clearCell(5, 3); 
 
