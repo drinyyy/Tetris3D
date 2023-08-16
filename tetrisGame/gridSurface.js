@@ -8,12 +8,12 @@ export function createGroundWithGrid(scene, box) {
 
     box.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, restitution: 0 }, scene);
 
-// Register a function to be called before each render
+
 scene.registerBeforeRender(function () {
-    // Check if the box is colliding with the ground
+   
     if (box.intersectsMesh(ground, true)) {
-        // Set the box's position to be exactly on the ground
-        box.position.y = ground.position.y + 0.50; // Adjust the value as needed
+        
+        box.position.y = ground.position.y + 0.50; 
     }
     });
     

@@ -11,18 +11,6 @@ const createScene = function () {
 
   scene.enablePhysics();
 
-  
-
-  // const ground = BABYLON.MeshBuilder.CreateGround("ground", scene);
-  // ground.scaling.x=15;
-  // ground.scaling.z=15;
-  // ground.position.y = 0;
-  // ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.PlaneImpostor, { mass: 0 }, scene);
-
-
-  
-
-
 var box = BABYLON.MeshBuilder.CreateBox("box", { size: 1.1 }, scene);
 var mat = new BABYLON.StandardMaterial("boxMat", scene);
 box.material = mat;
@@ -37,14 +25,14 @@ createGroundWithGrid(scene, box);
 
 
 
-// Track frame count and position adjustment
+
 var frameCount = 0;
 
-// Register a function to be called before each render
+
 scene.registerBeforeRender(function () {
-    // Implement game logic here if needed
     
-    // Check if it's time to adjust the position
+    
+    
     if (frameCount % 50 === 0) {
         box.position.y -= 1;
     }
